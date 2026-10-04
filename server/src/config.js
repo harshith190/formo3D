@@ -33,6 +33,10 @@ export const config = {
 
 export const useSupabase = Boolean(config.supabase.url && config.supabase.serviceKey);
 
-if (config.isProd && config.jwtSecret === 'dev-only-secret-change-me') {
+if (env.NETLIFY && !useSupabase) {
+  throw new Error('Set SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY for the Netlify backend.');
+}
+
+if ((config.isProd || env.NETLIFY) && config.jwtSecret === 'dev-only-secret-change-me') {
   throw new Error('Set JWT_SECRET in production.');
 }
